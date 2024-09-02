@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: send-documents-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  app:
+    build: .
+    container_name: send-documents-app
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "7878:7878"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - mongodb
+    stdin_open: true
+    tty: true
+
+volumes:
+  mongo-data:
